@@ -3,7 +3,6 @@ import os
 
 # Define the path to the image
 dir_path = os.path.dirname(os.path.abspath(__file__))
-image_path = os.path.join(dir_path, 'img1.jpeg')
 
 # folderImage_path = os.path.join(dir_path,'Bottle Images','Plastic Bottles')
 # listImages = os.listdir(folderImage_path)
