@@ -1,0 +1,15 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['glass', 'plastic','PET','pepsi','cocacola','water','HDPE','juice','milk','dasani','aquafina','evian','soft-drink',' '
+            'cristaline','sprite','oil','cleaning','auchan','vittel','cristaline-juice','sun-tropics','ocean-spray','orangina','paturages',
+            'lesieur','maxer','crystal-geyser','arrowhead','TRITAN','verka','washing','sodocalcique','alcohol','core-hydration','innocent','spring-water']
+
+roboflow:
+  workspace: ecoscan-fp6hu
+  project: bottles-1cgzb
+  version: 1
+  license: MIT
+  url: https://universe.roboflow.com/ecoscan-fp6hu/bottles-1cgzb/dataset/1
