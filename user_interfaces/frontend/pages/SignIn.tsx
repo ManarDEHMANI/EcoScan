@@ -24,7 +24,7 @@ const SignIn = ({ navigation }: Props) => {
       <View style={styles.inputContainer}>
         <Text style={styles.label}>E-mail</Text>
         <TextInput
-          style={[styles.input]}
+          style={[styles.input,styles.inputDefault]}
           placeholder="Your email"
           placeholderTextColor="#A0A0A0"
           value={form.email}
@@ -37,7 +37,7 @@ const SignIn = ({ navigation }: Props) => {
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Password</Text>
           <TextInput
-            style={[styles.input]}
+            style={[styles.input,styles.inputDefault]}
             placeholder="Password"
             placeholderTextColor="#A0A0A0"
             secureTextEntry
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '9796A1',
+    color: '#9796A1',
     marginBottom: 8,
   },
   input: {
@@ -91,6 +91,9 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     backgroundColor: '#F5F5F5',
+  },
+  inputDefault: {
+    borderColor: '#ccc',
   },
   inputEmail: {
     borderColor: '#FF6347',
