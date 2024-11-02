@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
-import Home from './pages/accueil';
+import Home from './pages/Home';
 import { RootStackParamList } from './pages/types';
 
 const Stack = createStackNavigator<RootStackParamList>();
