@@ -9,8 +9,8 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-const username = encodeURIComponent("projetesiee1");
-const password = encodeURIComponent("FPSOJtVNLb8AhPOr");
+const username = encodeURIComponent("<username>");
+const password = encodeURIComponent("<password>");
 const database = "EcoScan";
 
 const uri = `mongodb+srv://${username}:${password}@cluster0.4op3n.mongodb.net/${database}?retryWrites=true&w=majority&appName=Cluster0`;
