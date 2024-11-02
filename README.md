@@ -8,7 +8,6 @@ Run the following to install all the necessary dependencies:
 ```
 npm install
 ```
-
 ### Step 2: Start the Metro Bundler
 ```
 npx react-native start
@@ -22,8 +21,12 @@ Run the following to install all the necessary dependencies:
 ```
 npm install
 ```
-
-### Step 2: Start the server connection
+### Step 2: Add your username and password at user_interfaces/backend/server.js
+```
+const username = encodeURIComponent("<username>");
+const password = encodeURIComponent("<password>");
+```
+### Step 3: Start the server connection
 ```
 npm start
 ```
