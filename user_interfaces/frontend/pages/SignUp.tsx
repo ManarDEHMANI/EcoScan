@@ -53,7 +53,7 @@ const handlePasswordChange = (password: string) => {
 const validatePassword = () => {
   if (!validator.isStrongPassword(form.password)) {
     setIsPasswordValid(false);
-    setPasswordError('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un symbole.');
+    setPasswordError('Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one symbol.');
     setInputBorderStyle(styles.inputError); 
   } else {
     setIsPasswordValid(true);
@@ -133,9 +133,9 @@ const validateEmail = () => {
             placeholder="Password"
             placeholderTextColor="#A0A0A0"
             secureTextEntry={!isPasswordVisible}
+            onChangeText={handlePasswordChange}
             onEndEditing={validatePassword}
             value={form.password}
-            onChangeText={(password) => setForm({ ...form, password })}
           />
           <TouchableOpacity
             onPress={() => setIsPasswordVisible(!isPasswordVisible)}
