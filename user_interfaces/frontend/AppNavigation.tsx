@@ -7,11 +7,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
-import Home from './pages/accueil';
 import Welcome from './pages/welcome';
 import Scanner from './pages/scanner';
 import Profile from './pages/profile';
-
+import Home from './pages/Home';
 import { RootStackParamList } from './pages/types';
 
 const Stack = createStackNavigator<RootStackParamList>();

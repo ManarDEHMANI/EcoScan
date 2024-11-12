@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PhoneInput from 'react-native-phone-input';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import validator from 'validator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import axios from 'axios';
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
 
@@ -30,6 +30,8 @@ const SignUp = ({ navigation }: Props) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false); 
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [passwordError, setPasswordError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const handlePhoneChange = (telephone: string) => {
     setForm({ ...form, telephone });
   };
@@ -71,6 +73,46 @@ const validateEmail = () => {
     setIsEmailValid(true);
     setEmailError('');
     setInputBorderStyle(styles.inputValid); 
+  }
+};
+
+const validateForm = () => {
+  validateEmail();
+  validatePassword();
+  return isEmailValid && isPasswordValid && form.firstname !== '' && form.lastname !== '';
+};
+
+const submitForm = async() => {
+  if(validateForm()){
+    try{
+      setLoading(true);
+      const response = await axios.post('http://10.0.2.2:4000/createUser',{
+        name: form.firstname,
+        lastname: form.lastname,
+        email: form.email,
+        password: form.password,
+        telephone: form.telephone,
+      });
+      // console.log(response.data);
+      setForm({
+        firstname: '',
+        lastname: '',
+        telephone: '',
+        email: '',
+        password: '',
+        country: 'fr',
+      });
+      
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.message || 'An error occurred';
+        console.error('Error message:', message);
+      } else {
+        console.error('Unexpected error:', err);
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 };
 
@@ -150,8 +192,12 @@ const validateEmail = () => {
         </View>
         {!isPasswordValid && <Text style={styles.errorText}>{passwordError}</Text>}
       </View>
-      <TouchableOpacity style={styles.loginButton} onPress={() => console.log("Form data:", form)}>
-        <Text style={styles.loginButtonText}>Sign Up</Text>
+      <TouchableOpacity style={styles.loginButton} onPress={submitForm} disabled={loading}>
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.loginButtonText}>Sign Up</Text>
+        )}
       </TouchableOpacity>
 
       <View style={styles.signupContainer}>

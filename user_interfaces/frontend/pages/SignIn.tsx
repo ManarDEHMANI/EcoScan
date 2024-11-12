@@ -3,6 +3,8 @@ import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
+import axios from 'axios';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignIn'>;
 
@@ -16,6 +18,40 @@ const SignIn = ({ navigation }: Props) => {
     email: '',
     password: '',
   });
+
+  const validateForm = () => {
+    return form.email !== '' && form.password !== '';
+  };
+  const [loading, setLoading] = useState(false);
+  const submitForm = async() => {
+    if(validateForm()){
+      try{
+        setLoading(true);
+        const response = await axios.get('http://10.0.2.2:4000/connection',{
+          params:{
+            email: form.email,
+            password: form.password,
+          },
+        });
+        setForm({
+          email: '',
+          password: '',
+        });
+        if (response.data.success) {
+          navigation.navigate('Home');
+        }
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          const message = err.response?.data?.message || 'An error occurred';
+          console.error('Error message:', message);
+        } else {
+          console.error('Unexpected error:', err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,7 +85,7 @@ const SignIn = ({ navigation }: Props) => {
         <Text style={styles.forgotPassword}>Forgot password?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginButton} onPress={() => console.log("Form data:", form)}>
+      <TouchableOpacity style={styles.loginButton} onPress={() => submitForm()} disabled={loading}>
         <Text style={styles.loginButtonText}>Sign In</Text>
       </TouchableOpacity>
 
