@@ -12,7 +12,7 @@ type Props = {
 const Welcome= ({ navigation}  : Props ) => {
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.skipButton} onPress={() => navigation.navigate('SignIn')}>
+      <TouchableOpacity style={styles.skipButton} onPress={() => navigation.navigate('Home')}>
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
       
