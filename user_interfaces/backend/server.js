@@ -15,6 +15,7 @@ const password = encodeURIComponent("<password>");
 const database = "EcoScan";
 
 const uri = `mongodb+srv://${username}:${password}@cluster0.4op3n.mongodb.net/${database}?retryWrites=true&w=majority&appName=Cluster0`;
+//const uri = `mongodb+srv://admin:egSa89fZDEkI49Oy@cluster0.4op3n.mongodb.net/EcoScan?retryWrites=true&w=majority`
 
 const encryptPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
