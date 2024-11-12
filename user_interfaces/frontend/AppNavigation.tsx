@@ -12,6 +12,7 @@ import Scanner from './pages/scanner';
 import Profile from './pages/profile';
 import Home from './pages/Home';
 import { RootStackParamList } from './pages/types';
+import { Image } from 'react-native';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootStackParamList>();
@@ -22,23 +23,33 @@ const HomeTabs = () => {
       initialRouteName="Home"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName: string = '';
+          let iconName: string|JSX.Element = '';
 
           if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
+            iconName = (
+              <Image
+                source={require('./assets/home-icone.png')} 
+                style={{ width: size, height: size }}
+              />
+            );
           } else if (route.name === 'Scanner') {
-            iconName = focused ? 'scan' : 'scan-outline';
+            iconName = (
+              <Image
+                source={require('./assets/scan-icone.png')} 
+                style={{ width: size, height: size }}
+              />
+            );
           } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person-outline';
-          } else {
-            iconName = 'default-icon';
+            iconName = (
+              <Image
+                source={require('./assets/profil-icone.png')} 
+                style={{ width: size, height: size }}
+              />
+            );
           }
-          
-          return <Ionicons name={iconName} size={size} color={color} />;
-          
+          return iconName;
         },
-        tabBarActiveTintColor: '#34A853',
-        tabBarInactiveTintColor: 'gray',
+        tabBarLabel: () => null, 
       })}
     >
       <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
