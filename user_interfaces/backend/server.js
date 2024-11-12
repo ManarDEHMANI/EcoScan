@@ -14,7 +14,7 @@ const password = encodeURIComponent("<password>");
 const database = "EcoScan";
 
 const uri = `mongodb+srv://${username}:${password}@cluster0.4op3n.mongodb.net/${database}?retryWrites=true&w=majority&appName=Cluster0`;
-
+//const uri = `mongodb+srv://admin:egSa89fZDEkI49Oy@cluster0.4op3n.mongodb.net/EcoScan?retryWrites=true&w=majority`
 mongoose.connect(uri)
   .then(() => console.log('✅ Connected to MongoDB successfully'))
   .catch((err) => console.error('Error connecting to MongoDB:', err));
