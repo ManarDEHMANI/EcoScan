@@ -36,7 +36,8 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true},
   email: { type: String, required: true},
   telephone: { type: String, required: true},
-  password: { type: String, required: true}
+  password: { type: String, required: true},
+  avatar: { type: String, default: '' }
 });
 const User = mongoose.model('User', userSchema);
 
@@ -82,6 +83,27 @@ app.post("/createUser", async (req, res) => {
   }
 });
 
+//Endpoint to update avatar
+app.put('/users/:email/avatar', async (req, res) => {
+  const { email } = req.params;
+  const { avatar } = req.body;
+
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      { avatar },
+      { new: true }
+    );
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ message: 'Avatar updated', user: updatedUser });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Connect to database
 app.get("/connection", async (req, res) => {
   const { email, password } = req.query;
@@ -98,7 +120,15 @@ app.get("/connection", async (req, res) => {
       return res.json({ success: false, message: 'Invalid email or password' });
     }
     else{
-      res.status(200).json({ success: true, message: 'Login successful'});
+      res.status(200).json({ success: true, message: 'Login successful',
+        user: {
+          name: user.name,
+          lastname: user.lastname,
+          email: user.email,
+          avatar: user.avatar,
+          telephone: user.telephone
+        }
+      });
     }
   } catch (err) {
     console.log(err);

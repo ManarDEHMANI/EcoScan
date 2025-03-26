@@ -3,23 +3,58 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 const { width } = Dimensions.get('window');
 
 const Profile = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
+  const defaultAvatar = require('../assets/avatars/profil-de-lutilisateur.png');
+  const [selectedAvatar, setSelectedAvatar] = React.useState<any>(null);
+  const [name, setName] = React.useState('');
+  const [lastname, setLastname] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  React.useEffect(() => {
+    const fetchUserData = async () => {
+      const data = await AsyncStorage.getItem('userData');
+      if (data) {
+        const user = JSON.parse(data);
+        setName(user.name);
+        setLastname(user.lastname);
+        setEmail(user.email);
+        if (user.avatar) {
+          if (user.avatar.startsWith('http')) {
+            setSelectedAvatar({ uri: user.avatar });
+          } else {
+            // image locale => faire un mapping
+            const avatarMap: any = {
+              'femme.png': require('../assets/avatars/femme.png'),
+              'femme(1).png': require('../assets/avatars/femme(1).png'),
+              'homme.png': require('../assets/avatars/homme.png'),
+            };
+        
+            setSelectedAvatar(avatarMap[user.avatar] || defaultAvatar);
+          }
+        }
+      }
+    };
+    fetchUserData();
+  }, []);
+  
   return (
     <View style={styles.container}>
       <View style={styles.whitePanel}>
         <View style={styles.profileSection}>
+        <TouchableOpacity onPress={() => navigation.navigate('AvatarPicker')}>
           <Image
-            source={{ uri: 'https://i.pravatar.cc/300' }}
+            source={selectedAvatar || defaultAvatar}
             style={styles.avatar}
           />
-          <Text style={styles.name}>Tom Smith</Text>
-          <Text style={styles.email}>tomsmith@gmail.com</Text>
+        </TouchableOpacity>
+          <Text style={[styles.name, { color: '#000' }]}>{name} {lastname}</Text>
+          <Text style={[styles.email, { color: '#444' }]}>{email}</Text>
         </View>
 
         <View style={styles.menu}>
@@ -37,7 +72,14 @@ const Profile = () => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.logout}>
+        <TouchableOpacity style={styles.logout} 
+            onPress={async () => {
+            await AsyncStorage.removeItem('userData');
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'SignIn' }],
+              });
+            }}>
           <Image source={require('../assets/power-off.png')} style={styles.Icon}/>
           <Text style={styles.logoutText}>Log Out</Text>
         </TouchableOpacity>
