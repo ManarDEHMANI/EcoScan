@@ -11,6 +11,7 @@ import Welcome from './pages/welcome';
 import Scanner from './pages/scanner';
 import Profile from './pages/profile';
 import Home from './pages/Home';
+import Result from './pages/Result';
 import { RootStackParamList } from './pages/types';
 import { Image } from 'react-native';
 
@@ -67,6 +68,7 @@ const AppNavigation = () => {
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="Result" component={Result} options={{ title: 'Scan Result' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
