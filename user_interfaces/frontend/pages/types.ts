@@ -5,5 +5,6 @@ export type RootStackParamList = {
     Welcome: undefined;
     Scanner: undefined;
     Profile: undefined;
+    Result:undefined;
   };
   

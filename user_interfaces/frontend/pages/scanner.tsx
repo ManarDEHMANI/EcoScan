@@ -1,101 +1,140 @@
-// /pages/scanner.tsx
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, PermissionsAndroid, Platform } from 'react-native';
-import { RNCamera } from 'react-native-camera';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useState,useRef } from 'react';
+import { Text, View, Button, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Camera, useCameraDevice,useCameraDevices } from 'react-native-vision-camera';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './types';
+type ProfilScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Scanner'>;
+type Props = {
+    navigation: ProfilScreenNavigationProp;
+  };
+const Scanner = ({ navigation}  : Props) => {
+  const [cameraPermission, setCameraPermission] = useState(null);
+  const device = useCameraDevice('back'); // Set the initial camera device
+  const camera = useRef<Camera>(null);
+  const [capturedPhoto, setCapturedPhoto] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
 
-const Scanner = () => {
-  const [hasPermission, setHasPermission] = useState(null);
+  const checkCameraPermission = async () => {
+    const status = await Camera.getCameraPermissionStatus();
+    console.log('status',status);
+
+    if (status === 'granted') {
+      setCameraPermission(true);
+    } else if (status === 'not-determined') {
+      const permission = await Camera.requestCameraPermission();
+      setCameraPermission(permission === 'granted');
+    } else {
+        const permission = await Camera.requestCameraPermission();
+      setCameraPermission(true);
+    }
+  };
 
   useEffect(() => {
-    (async () => {
-      if (Platform.OS === 'android') {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-          {
-            title: "Camera Permission",
-            message: "This app needs access to your camera to scan products.",
-            buttonNeutral: "Ask Me Later",
-            buttonNegative: "Cancel",
-            buttonPositive: "OK"
-          }
-        );
-        setHasPermission(granted === PermissionsAndroid.RESULTS.GRANTED);
-      } else {
-        setHasPermission(true);
-      }
-    })();
+    checkCameraPermission();
   }, []);
 
-  if (hasPermission === null) {
-    return <View><Text>Requesting for camera permission...</Text></View>;
+  if (cameraPermission === null) {
+    return <Text>Checking camera permission...</Text>;
+  } else if (!cameraPermission) {
+    return <Text>Camera permission not granted</Text>;
   }
-  if (hasPermission === false) {
-    return <View><Text>No access to camera</Text></View>;
+
+  if (!device) {
+    return <Text>No camera device available</Text>;
   }
+
+  // const camera = useRef<Camera>(null);
+  // const camera = useRef(null);
+
+  const takePhoto = async () => {
+    try {
+      if (!camera.current) {
+        console.error('Camera reference not available.', camera);
+        return;
+      }
+
+      const photo = await camera.current.takePhoto();
+      console.log(photo);
+
+      if (photo) {
+        setCapturedPhoto(`file://${photo.path}`);
+        setShowPreview(true);
+      } else {
+        console.error('Photo captured is undefined or empty.');
+      }
+    } catch (error) {
+      console.error('Error capturing photo:', error);
+    }
+  };
+
+  const confirmPhoto = () => {
+    // User confirmed, further actions with the captured photo
+    // For example, save the photo to storage, etc.
+    console.log('Photo confirmed:', capturedPhoto);
+    navigation.navigate('Result', { photoUri: capturedPhoto });
+    };
+
+  const retakePhoto = () => {
+    // User wants to retake the photo
+    setCapturedPhoto(null); // Clear the captured photo
+    setShowPreview(false); // Hide the preview
+  };
+
+  const onCameraReady = (ref) => {
+    // Camera component is ready, set the camera reference
+    camera.current = ref;// Reference to the Camera component (e.g., obtained from ref prop)
+  };
 
   return (
-    <View style={styles.container}>
-      <RNCamera
-        style={styles.camera}
-        type={RNCamera.Constants.Type.back}
-        captureAudio={false}
-      >
+      <View style={styles.container}>
+        <Camera
+          style={styles.camera}
+          device={device}
+          isActive={true}
+          ref={(ref) => onCameraReady(ref)}
+          photo={true}
+        />
         <View style={styles.overlay}>
-          <View style={styles.scanArea} />
-        </View>
-      </RNCamera>
-      <View style={styles.labelContainer}>
-        <Text style={styles.labelText}>Plastic</Text>
-      </View>
-      <TouchableOpacity style={styles.captureButton}>
-        <Ionicons name="camera" size={28} color="white" />
-      </TouchableOpacity>
-    </View>
-  );
-};
+          <View style={styles.topBar}>
+            <Text style={styles.headerText}>Scan Bottle</Text>
+          </View>
+          {showPreview && capturedPhoto ? (
+            <View style={styles.previewContainer}>
+              <Image source={{ uri: capturedPhoto }} style={styles.capturedImage} />
+              <View style={styles.previewButtons}>
+                <Button title="Retake" onPress={retakePhoto} />
+                <Button title="Confirm" onPress={confirmPhoto} />
+              </View>
+            </View>
+          ) : (
+            <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.captureButton} onPress={takePhoto} />
+            </View>
+          )}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  camera: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scanArea: {
-    width: 250,
-    height: 250,
-    borderColor: '#fff',
-    borderWidth: 2,
-    borderRadius: 15,
-  },
-  labelContainer: {
-    position: 'absolute',
-    bottom: 100,
-    alignSelf: 'center',
-    padding: 10,
-    backgroundColor: '#34A853',
-    borderRadius: 5,
-  },
-  labelText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  captureButton: {
-    position: 'absolute',
-    bottom: 30,
-    alignSelf: 'center',
-    backgroundColor: '#34A853',
-    padding: 15,
-    borderRadius: 50,
-  },
-});
+        </View>
+      </View>
+    );
+  };
+
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: '#fff' },
+    camera: { flex: 1 },
+    overlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'space-between' },
+    topBar: { flexDirection: 'row', alignItems: 'center', padding: 16, backgroundColor: 'rgba(255, 255, 255, 0.9)' },
+    backButton: { paddingHorizontal: 8 },
+    backButtonText: { fontSize: 24 },
+    headerText: { fontSize: 20, fontWeight: 'bold', marginLeft: 16 },
+    captureButton: { alignSelf:'center',width: 80, height: 80, borderRadius: 40, backgroundColor: 'white',marginBottom:20},
+    previewContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    capturedImage: { width: 300, height: 300, marginBottom: 20 },
+    previewButtons: { flexDirection: 'row', justifyContent: 'space-between', width: '80%' },
+    resultContainer: { alignItems: 'center', padding: 16, backgroundColor: 'rgba(255, 255, 255, 0.9)', borderTopLeftRadius: 20, borderTopRightRadius: 20 },
+    resultTag: { backgroundColor: '#E0E0E0', borderRadius: 16, padding: 8, paddingHorizontal: 16, marginBottom: 8 },
+    resultText: { fontSize: 16, fontWeight: 'bold' },
+    description: { textAlign: 'center', color: '#666', paddingHorizontal: 16 },
+    navigation: { flexDirection: 'row', justifyContent: 'space-around', padding: 16, backgroundColor: 'rgba(255, 255, 255, 0.9)', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
+    navIcon: { width: 24, height: 24, borderRadius: 12, backgroundColor: '#ccc' }
+  });
 
 export default Scanner;
