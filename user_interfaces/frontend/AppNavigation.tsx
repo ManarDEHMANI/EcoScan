@@ -2,7 +2,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 import SignIn from './pages/SignIn';
@@ -13,6 +12,9 @@ import Profile from './pages/profile';
 import Home from './pages/Home';
 import { RootStackParamList } from './pages/types';
 import { Image } from 'react-native';
+import UserProfile from './pages/userProfile';
+import UserHistory from './pages/userHistory';
+import Contact from './pages/contact';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootStackParamList>();
@@ -67,6 +69,9 @@ const AppNavigation = () => {
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="UserProfile" component={UserProfile} />
+        <Stack.Screen name="UserHistory" component={UserHistory} />
+        <Stack.Screen name="Contact" component={Contact} />
       </Stack.Navigator>
     </NavigationContainer>
   );
