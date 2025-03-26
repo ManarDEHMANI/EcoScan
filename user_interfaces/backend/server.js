@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require('dotenv').config();
@@ -15,6 +16,13 @@ const database = "EcoScan";
 
 const uri = `mongodb+srv://${username}:${password}@cluster0.4op3n.mongodb.net/${database}?retryWrites=true&w=majority&appName=Cluster0`;
 //const uri = `mongodb+srv://admin:egSa89fZDEkI49Oy@cluster0.4op3n.mongodb.net/EcoScan?retryWrites=true&w=majority`
+
+const encryptPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  return hashedPassword;
+};
+
 mongoose.connect(uri)
   .then(() => console.log('✅ Connected to MongoDB successfully'))
   .catch((err) => console.error('Error connecting to MongoDB:', err));
@@ -58,12 +66,13 @@ app.post("/createUser", async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: 'Email is already registered' });
     }
+    const encrypt = await encryptPassword(password);
     const user = new User({
       lastname,
       name,
       email,
       telephone,
-      password,
+      password : encrypt,
     });
     const newUser = await user.save();
     res.status(201).json(newUser);
@@ -84,8 +93,8 @@ app.get("/connection", async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
-    // const isMatch = await bcrypt.compare(password, user.password);
-    if (password!==user.password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
       return res.json({ success: false, message: 'Invalid email or password' });
     }
     else{
