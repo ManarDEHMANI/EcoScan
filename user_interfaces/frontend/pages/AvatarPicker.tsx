@@ -42,7 +42,7 @@ const AvatarPicker = () => {
         avatarValue = selectedAvatar.uri;
       } else if (selectedAvatar) {
         const resolved = Image.resolveAssetSource(selectedAvatar);
-        avatarValue = resolved?.uri?.split('/').pop() || '';
+        avatarValue = (resolved?.uri?.split('/').pop() || '').split('?')[0];
       }
   
       if (!avatarValue) {

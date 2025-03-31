@@ -88,6 +88,8 @@ app.put('/users/:email/avatar', async (req, res) => {
   const { email } = req.params;
   const { avatar } = req.body;
 
+  console.log("📩 Avatar update received for:", email, "with avatar:", avatar);
+
   try {
     const updatedUser = await User.findOneAndUpdate(
       { email },
@@ -103,6 +105,19 @@ app.put('/users/:email/avatar', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+app.put('/init-avatar-field', async (req, res) => {
+  try {
+    const result = await User.updateMany(
+      { avatar: { $exists: false } },
+      { $set: { avatar: '' } }
+    );
+    res.status(200).json({ message: 'Avatar field initialized', result });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 // Connect to database
 app.get("/connection", async (req, res) => {
@@ -135,6 +150,16 @@ app.get("/connection", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+app.get("/getAllUsers", async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 // Start the server
 app.listen(port, () => {

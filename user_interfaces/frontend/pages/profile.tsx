@@ -17,31 +17,36 @@ const Profile = () => {
   const [lastname, setLastname] = React.useState('');
   const [email, setEmail] = React.useState('');
   React.useEffect(() => {
-    const fetchUserData = async () => {
-      const data = await AsyncStorage.getItem('userData');
-      if (data) {
-        const user = JSON.parse(data);
-        setName(user.name);
-        setLastname(user.lastname);
-        setEmail(user.email);
-        if (user.avatar) {
-          if (user.avatar.startsWith('http')) {
-            setSelectedAvatar({ uri: user.avatar });
-          } else {
-            // image locale => faire un mapping
-            const avatarMap: any = {
-              'femme.png': require('../assets/avatars/femme.png'),
-              'femme(1).png': require('../assets/avatars/femme(1).png'),
-              'homme.png': require('../assets/avatars/homme.png'),
-            };
-        
-            setSelectedAvatar(avatarMap[user.avatar] || defaultAvatar);
-          }
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchUserData();
+    });
+    return unsubscribe;
+  }, [navigation]);
+  
+  const fetchUserData = async () => {
+    const data = await AsyncStorage.getItem('userData');
+    if (data) {
+      const user = JSON.parse(data);
+      setName(user.name);
+      setLastname(user.lastname);
+      setEmail(user.email);
+      if (user.avatar) {
+        if (user.avatar.startsWith('http') || user.avatar.startsWith('file') || user.avatar.startsWith('/')) {
+          setSelectedAvatar({ uri: user.avatar });
+        } else {
+          // image locale => faire un mapping
+          const avatarMap: any = {
+            'femme.png': require('../assets/avatars/femme.png'),
+            'femme(1).png': require('../assets/avatars/femme(1).png'),
+            'homme.png': require('../assets/avatars/homme.png'),
+          };
+      
+          setSelectedAvatar(avatarMap[user.avatar] || defaultAvatar);
         }
       }
-    };
-    fetchUserData();
-  }, []);
+    }
+  };
+
   
   return (
     <View style={styles.container}>
