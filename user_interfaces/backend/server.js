@@ -46,15 +46,6 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// Get all items
-// app.get("/getAllUsers", async (req, res) => {
-//   try {
-//     const users = await User.find({});
-//     res.status(200).json(users);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// });
 
 // Create a new item
 app.post("/createUser", async (req, res) => {
@@ -83,28 +74,31 @@ app.post("/createUser", async (req, res) => {
   }
 });
 
-//Endpoint to update avatar
-app.put('/users/:email/avatar', async (req, res) => {
-  const { email } = req.params;
-  const { avatar } = req.body;
 
-  console.log("📩 Avatar update received for:", email, "with avatar:", avatar);
+app.put('/users/update/:_id', async (req, res) => {
+  const { _id } = req.params;
+  const { name, lastname, email, telephone, avatar } = req.body;
 
   try {
-    const updatedUser = await User.findOneAndUpdate(
-      { email },
-      { avatar },
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { name, lastname, email, telephone, avatar },
       { new: true }
     );
+
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.status(200).json({ message: 'Avatar updated', user: updatedUser });
+
+    res.status(200).json({ message: 'User updated', user: updatedUser });
+    console.log("🛠️ PUT /users/update/:id", _id, req.body);
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: err.message });
+    console.log("🛠️ PUT /users/update/:id", _id, req.body);
+
   }
 });
+
 
 app.put('/init-avatar-field', async (req, res) => {
   try {
@@ -117,6 +111,8 @@ app.put('/init-avatar-field', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+
 
 
 // Connect to database
@@ -141,7 +137,8 @@ app.get("/connection", async (req, res) => {
           lastname: user.lastname,
           email: user.email,
           avatar: user.avatar,
-          telephone: user.telephone
+          telephone: user.telephone,
+          _id: user._id 
         }
       });
     }

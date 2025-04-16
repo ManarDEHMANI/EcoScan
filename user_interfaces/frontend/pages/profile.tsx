@@ -34,7 +34,6 @@ const Profile = () => {
         if (user.avatar.startsWith('http') || user.avatar.startsWith('file') || user.avatar.startsWith('/')) {
           setSelectedAvatar({ uri: user.avatar });
         } else {
-          // image locale => faire un mapping
           const avatarMap: any = {
             'femme.png': require('../assets/avatars/femme.png'),
             'femme(1).png': require('../assets/avatars/femme(1).png'),
@@ -52,7 +51,7 @@ const Profile = () => {
     <View style={styles.container}>
       <View style={styles.whitePanel}>
         <View style={styles.profileSection}>
-        <TouchableOpacity onPress={() => navigation.navigate('AvatarPicker')}>
+        <TouchableOpacity>
           <Image
             source={selectedAvatar || defaultAvatar}
             style={styles.avatar}
@@ -72,8 +71,8 @@ const Profile = () => {
             <Text style={styles.menuText}>My Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Contact')}>
-          <Image source={require('../assets/envelope.png')} style={styles.Icon}/>
-          <Text style={styles.menuText}>Contact Us</Text>
+            <Image source={require('../assets/envelope.png')} style={styles.Icon}/>
+            <Text style={styles.menuText}>Contact Us</Text>
           </TouchableOpacity>
         </View>
 
