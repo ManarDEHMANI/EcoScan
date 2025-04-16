@@ -6,5 +6,9 @@ export type RootStackParamList = {
     Scanner: undefined;
     Profile: undefined;
     Result:undefined;
+    UserProfile: undefined;
+    UserHistory: undefined;
+    Contact: undefined;
+    AvatarPicker: undefined;
   };
   

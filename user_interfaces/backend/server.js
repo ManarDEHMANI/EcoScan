@@ -36,7 +36,8 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true},
   email: { type: String, required: true},
   telephone: { type: String, required: true},
-  password: { type: String, required: true}
+  password: { type: String, required: true},
+  avatar: { type: String, default: '' }
 });
 const User = mongoose.model('User', userSchema);
 
@@ -45,15 +46,6 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// Get all items
-// app.get("/getAllUsers", async (req, res) => {
-//   try {
-//     const users = await User.find({});
-//     res.status(200).json(users);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// });
 
 // Create a new item
 app.post("/createUser", async (req, res) => {
@@ -82,6 +74,47 @@ app.post("/createUser", async (req, res) => {
   }
 });
 
+
+app.put('/users/update/:_id', async (req, res) => {
+  const { _id } = req.params;
+  const { name, lastname, email, telephone, avatar } = req.body;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { name, lastname, email, telephone, avatar },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User updated', user: updatedUser });
+    console.log("🛠️ PUT /users/update/:id", _id, req.body);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+    console.log("🛠️ PUT /users/update/:id", _id, req.body);
+
+  }
+});
+
+
+app.put('/init-avatar-field', async (req, res) => {
+  try {
+    const result = await User.updateMany(
+      { avatar: { $exists: false } },
+      { $set: { avatar: '' } }
+    );
+    res.status(200).json({ message: 'Avatar field initialized', result });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
+
 // Connect to database
 app.get("/connection", async (req, res) => {
   const { email, password } = req.query;
@@ -98,13 +131,32 @@ app.get("/connection", async (req, res) => {
       return res.json({ success: false, message: 'Invalid email or password' });
     }
     else{
-      res.status(200).json({ success: true, message: 'Login successful'});
+      res.status(200).json({ success: true, message: 'Login successful',
+        user: {
+          name: user.name,
+          lastname: user.lastname,
+          email: user.email,
+          avatar: user.avatar,
+          telephone: user.telephone,
+          _id: user._id 
+        }
+      });
     }
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: err.message });
   }
 });
+
+app.get("/getAllUsers", async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 // Start the server
 app.listen(port, () => {

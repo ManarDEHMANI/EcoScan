@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import axios from 'axios';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignIn'>;
 
@@ -38,6 +38,7 @@ const SignIn = ({ navigation }: Props) => {
           password: '',
         });
         if (response.data.success) {
+          await AsyncStorage.setItem('userData', JSON.stringify(response.data.user));
           navigation.navigate('Home');
         }
       } catch (err: unknown) {
