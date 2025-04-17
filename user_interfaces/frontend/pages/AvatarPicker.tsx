@@ -11,6 +11,7 @@ const avatarList = [
   require('../assets/avatars/femme.png'),
   require('../assets/avatars/femme(1).png'),
   require('../assets/avatars/homme.png'),
+  require('../assets/avatars/profil-de-lutilisateur.png')
 ];
 
 const AvatarPicker = () => {
@@ -50,9 +51,10 @@ const AvatarPicker = () => {
         return;
       }
   
-      await axios.put(`http://10.0.2.2:4000/users/${user.email}/avatar`, {
+      await axios.put(`http://10.0.2.2:4000/users/update/${user._id}`, {
+        ...user,
         avatar: avatarValue,
-      });
+      });      
   
       const updatedUser = { ...user, avatar: avatarValue };
   

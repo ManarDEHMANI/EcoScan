@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 4000;
+const nodemailer = require('nodemailer'); 
 
 app.use(cors());
 app.use(express.json());
@@ -74,6 +75,38 @@ app.post("/createUser", async (req, res) => {
   }
 });
 
+app.post("/send-email", async (req, res) => {
+  const { name, email, subject, message } = req.body;
+  console.log("📨 Email request received:", req.body);
+
+  try {
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'projetesiee1@gmail.com', 
+        pass: 'projet2024',     
+      }
+    });
+
+    await transporter.sendMail({
+      from: `"${name}" <${email}>`,
+      to: 'projetesiee1@gmail.com', 
+      subject: `Contact: ${subject}`,
+      text: `
+        Name: ${name}
+        Email: ${email}
+
+        Message:
+        ${message}
+      `
+    });
+
+    res.status(200).json({ success: true, message: 'Email sent successfully!' });
+  } catch (err) {
+    console.error('❌ Email failed:', err);
+    res.status(500).json({ success: false, message: 'Failed to send email', error: err.message });
+  }
+});
 
 app.put('/users/update/:_id', async (req, res) => {
   const { _id } = req.params;
@@ -99,7 +132,6 @@ app.put('/users/update/:_id', async (req, res) => {
   }
 });
 
-
 app.put('/init-avatar-field', async (req, res) => {
   try {
     const result = await User.updateMany(
@@ -111,8 +143,6 @@ app.put('/init-avatar-field', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-
 
 
 // Connect to database
