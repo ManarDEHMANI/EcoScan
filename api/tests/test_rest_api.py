@@ -1,10 +1,3 @@
-
-import pytest
-from fastapi.testclient import TestClient
-from rest_api.main import app
-
-client = TestClient(app)
-
 def test_health_check():
     """Test if API is running."""
     response = client.get("/")
@@ -24,3 +17,33 @@ def test_valid_image_upload():
     
     assert response.status_code == 200
     assert "predictions" in response.json()
+
+def test_tag_crud(test_client):
+    tag = {
+        "tag": "mock_test",
+        "description": "mock desc",
+        "impact": "mock impact",
+        "practice": "mock practice",
+        "harmfulness": "mock harmfulness"
+    }
+
+    # POST
+    res = test_client.post("/tag/", json=tag)
+    assert res.status_code == 200
+
+    # GET
+    res = test_client.get("/tag/mock_test")
+    assert res.status_code == 200
+    assert res.json()["description"] == "mock desc"
+    assert res.json()["impact"] == "mock impact"
+    assert res.json()["practice"] == "mock practice"
+    assert res.json()["harmfulness"] == "mock harmfulness"
+
+    # PUT
+    tag["description"] = "updated desc"
+    res = test_client.put("/tag/mock_test", json=tag)
+    assert res.status_code == 200
+
+    # DELETE
+    res = test_client.delete("/tag/mock_test")
+    assert res.status_code == 200
