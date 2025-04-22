@@ -43,3 +43,9 @@ To ensure everything works, run:
 ```sh
 pytest tests/
 ```
+or
+```sh
+make test       # lance juste les tests
+make coverage   # lance tests + rapport html
+make clean      # nettoie les fichiers temporaires
+```
