@@ -14,7 +14,7 @@ Send an image, and the API will return detected objects with their confidence sc
 
 ### 1️⃣ Clone the Repository
 ```sh
-git clone https://github.com/yourusername/yolo-api.git
+git clone https://github.com/ManarDEHMANI/EcoScan.git
 cd yolo-api
 ```
 ### 2️⃣ Create a Virtual Environment
@@ -29,12 +29,13 @@ Under the parent folder in this repository run
 pip install -r api/requirements.txt
 ```
 ### 4️⃣ Set Up Environment Variables
-Create a .env file in the root directory and specify the model path:
+Create a .env file in the root directory and specify the model path and the mongo uri:
 ```sh
 MODEL_PATH=yolov8n.pt
+MONGODB_URI="..."
 ```
 ## 🚀 Running the API
-Start the FastAPI server:
+Start the FastAPI server (inside api folder):
 ```sh
 uvicorn api.main:app --reload
 ```
