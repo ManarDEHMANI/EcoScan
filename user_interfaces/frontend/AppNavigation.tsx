@@ -15,6 +15,7 @@ import UserProfile from './pages/userProfile';
 import UserHistory from './pages/userHistory';
 import Contact from './pages/contact';
 import AvatarPicker from './pages/AvatarPicker';
+import ScientificBasis from './pages/ScientificBasis';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootStackParamList>();
@@ -73,7 +74,9 @@ const AppNavigation = () => {
         <Stack.Screen name="UserHistory" component={UserHistory} />
         <Stack.Screen name="Contact" component={Contact} />
         <Stack.Screen name="AvatarPicker" component={AvatarPicker} />
+        <Stack.Screen name="ScientificBasis" component={ScientificBasis} />
         <Stack.Screen name="Result" component={Result} options={{ title: 'Scan Result' }} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

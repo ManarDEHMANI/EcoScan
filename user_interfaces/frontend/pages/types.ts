@@ -10,5 +10,6 @@ export type RootStackParamList = {
     UserHistory: undefined;
     Contact: undefined;
     AvatarPicker: undefined;
+    ScientificBasis : undefined
   };
   

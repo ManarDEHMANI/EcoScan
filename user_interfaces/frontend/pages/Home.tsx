@@ -32,6 +32,10 @@ const Home = ({ navigation}  : Props ) => {
           By using EcoScan, you contribute to a cleaner environment, reduce pollution, and make informed choices for your health and the planet.
         </Text>
       </View>
+      <TouchableOpacity onPress={() => navigation.navigate('ScientificBasis')}>
+        <Text style={{ color: '#007bff' }}>📘 Voir la méthodologie de classification</Text>
+      </TouchableOpacity>
+
     </View>
   );
 };
