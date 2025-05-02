@@ -6,6 +6,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { API_URL } from '../config';
 
 const avatarList = [
   require('../assets/avatars/femme.png'),
@@ -51,7 +52,7 @@ const AvatarPicker = () => {
         return;
       }
   
-      await axios.put(`http://10.0.2.2:4000/users/update/${user._id}`, {
+      await axios.put(`${API_URL}/users/update/${user._id}`, {
         ...user,
         avatar: avatarValue,
       });      

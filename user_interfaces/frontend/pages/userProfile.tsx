@@ -6,6 +6,7 @@ import { RootStackParamList } from './types';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
+import { API_URL } from '../config';
 
 
 const defaultAvatar = require('../assets/avatars/profil-de-lutilisateur.png');
@@ -59,7 +60,7 @@ const UserProfile = () => {
         telephone,
         avatar: rawAvatar
       };
-      const response = await axios.put(`http://10.0.2.2:4000/users/update/${userId}`, updatedUser);
+      const response = await axios.put(`${API_URL}/users/update/${userId}`, updatedUser);
       await AsyncStorage.setItem('userData', JSON.stringify(response.data.user));
 
       console.log("➡️ Envoi de la mise à jour pour l'utilisateur :", userId);

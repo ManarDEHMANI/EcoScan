@@ -5,11 +5,12 @@ export type RootStackParamList = {
     Welcome: undefined;
     Scanner: undefined;
     Profile: undefined;
-    Result:undefined;
     UserProfile: undefined;
     UserHistory: undefined;
     Contact: undefined;
     AvatarPicker: undefined;
-    ScientificBasis : undefined
+    ScientificBasis : undefined;
+    Result: { photoUri: string; predictions: Record<string, any> };
+    
   };
   

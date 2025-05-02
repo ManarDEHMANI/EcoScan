@@ -7,7 +7,7 @@ import { RootStackParamList } from './types';
 import validator from 'validator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-
+import { API_URL } from '../config';
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
 
 type Props = {
@@ -86,7 +86,9 @@ const submitForm = async() => {
   if(validateForm()){
     try{
       setLoading(true);
-      const response = await axios.post('http://10.0.2.2:4000/createUser',{
+      //const response = await axios.post('http://10.0.2.2:4000/createUser',{
+        const response = await axios.post(`${API_URL}/createUser`,{
+
         name: form.firstname,
         lastname: form.lastname,
         email: form.email,

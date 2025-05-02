@@ -5,6 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignIn'>;
 
@@ -27,7 +28,7 @@ const SignIn = ({ navigation }: Props) => {
     if(validateForm()){
       try{
         setLoading(true);
-        const response = await axios.get('http://10.0.2.2:4000/connection',{
+        const response = await axios.get(`${API_URL}/connection`,{
           params:{
             email: form.email,
             password: form.password,

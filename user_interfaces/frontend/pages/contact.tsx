@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Linking, Image, ScrollView,Dimensions, Alert } from 'react-native';
+import { API_URL } from '../config';
 
 const Contact = () => {
   const [name, setName] = useState('');
@@ -10,7 +11,7 @@ const Contact = () => {
 
   const sendMail = async () => {
     try {
-      await axios.post('http://10.0.2.2:4000/send-email', {
+      await axios.post(`${API_URL}/send-email`, {
         name,
         email,
         subject,

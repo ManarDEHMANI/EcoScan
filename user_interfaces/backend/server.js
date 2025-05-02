@@ -7,6 +7,12 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 4000;
 const nodemailer = require('nodemailer'); 
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const axios = require('axios');
+const FormData = require('form-data'); 
+
 
 app.use(cors());
 app.use(express.json());
@@ -46,7 +52,6 @@ const User = mongoose.model('User', userSchema);
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
-
 
 // Create a new item
 app.post("/createUser", async (req, res) => {
@@ -187,8 +192,36 @@ app.get("/getAllUsers", async (req, res) => {
   }
 });
 
+const upload = multer({ dest: 'uploads/' });
+app.post('/scan-product', upload.single('file'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded.' });
+  }
+
+  try {
+    const imagePath = path.resolve(req.file.path);
+
+    const form = new FormData();
+    form.append('file', fs.createReadStream(imagePath));
+
+    const response = await axios.post('http://192.168.0.25:8000/predict/', form, {
+      headers: form.getHeaders(),
+    });
+
+    // Supprimer le fichier temporaire
+    fs.unlink(imagePath, (err) => {
+      if (err) console.error('❌ Failed to delete temp image:', err);
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('❌ Error sending image to YOLO API:', error.message);
+    res.status(500).json({ message: 'Error processing image', error: error.message });
+  }
+});
 
 // Start the server
-app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`🚀 Server running on http://0.0.0.0:${port}`);
 });
+
