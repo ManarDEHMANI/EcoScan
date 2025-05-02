@@ -86,35 +86,28 @@ etiquettes = [
     },
     # Glass Bottles
     {
-        "tag": "Sodocalcique",
-        "description": "Sodocalcique bottles are made from soda-lime glass, the most common type used for beverages like water, juice, and oil.",
-        "impact": "Highly recyclable with infinite recycling potential without quality loss.",
-        "practice": "Recycle glass properly, reuse containers, and choose products with high recycled glass content.",
-        "harmfulness": "Fragile and can cause injuries if broken."
-    },
-    {
-        "tag": "Alcohol Bottles",
+        "tag": "alcohol",
         "description": "Alcohol bottles, including those for spirits, wine, and liqueurs, are typically crafted from robust soda-lime glass with unique shapes and closures.",
         "impact": "Energy-intensive to produce but fully recyclable.",
         "practice": "Reuse bottles for storage or decoration, return them for recycling when possible, and support brands that use recycled glass.",
         "harmfulness": "Fragile and heavy, increasing transportation-related emissions."
     },
     {
-        "tag": "Water Bottles",
+        "tag": "water",
         "description": "Glass water bottles are valued for their purity and lack of chemical leaching.",
         "impact": "Heavier than plastic, increasing transportation emissions, but entirely recyclable.",
         "practice": "Use reusable glass water bottles, avoid single-use options, and ensure proper recycling after use.",
         "harmfulness": "Heavier than plastic, posing breakage risks."
     },
     {
-        "tag": "Juice Bottles",
+        "tag": "juice",
         "description": "Glass juice bottles preserve flavor without altering taste, often made from clear or amber soda-lime glass.",
         "impact": "Reusable and recyclable, reducing plastic pollution.",
         "practice": "Choose glass juice bottles, recycle them after use, and prefer products with minimal glass packaging.",
         "harmfulness": "Fragile and can lead to breakage."
     },
     {
-        "tag": "Oil Bottles",
+        "tag": "oil",
         "description": "Oil bottles are usually made from amber or clear soda-lime glass to protect contents from light degradation.",
         "impact": "Reusable and recyclable, decreasing reliance on plastic containers.",
         "practice": "Reuse oil bottles for storage or other purposes, recycle them appropriately, and support sustainable packaging choices.",
@@ -123,21 +116,21 @@ etiquettes = [
     
     # Glass Materials
     {
-        "tag": "Soda-lime Glass",
+        "tag": "sodocalcique",
         "description": "Soda-lime glass is the most widely used glass type for bottles, accounting for about 70-75% of all glass production.",
         "impact": "Highly recyclable with lower energy consumption during recycling compared to production from raw materials.",
         "practice": "Maximize recycling efforts, choose products made with recycled soda-lime glass, and support initiatives that enhance glass recycling rates.",
         "harmfulness": "Fragile and can pose injury risks if shattered."
     },
     {
-        "tag": "Borosilicate Glass",
+        "tag": "borosilicate",
         "description": "Borosilicate glass is rarely used for everyday beverage bottles but is ideal for specialized, heat-resistant bottles such as those used in laboratories and kitchens.",
         "impact": "Can be reused for many years due to its resistance to heat and chemicals, but difficult to recycle with standard soda-lime glass.",
         "practice": "Reuse borosilicate bottles for appropriate applications and support recycling facilities that handle borosilicate glass.",
         "harmfulness": "Less shock-resistant than soda-lime glass, still fragile and can cause injuries if broken."
     },
     {
-        "tag": "Crystal Glass",
+        "tag": "crystal",
         "description": "Crystal glass is typically used for luxury containers like wine carafes and high-end decorative items.",
         "impact": "Less recyclable due to potential lead content and high-energy production, often leading to increased waste when broken.",
         "practice": "Use crystal glass for decorative purposes, recycle lead-free variations when possible, and support sustainable crystal production.",
