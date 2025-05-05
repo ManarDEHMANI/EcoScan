@@ -23,6 +23,7 @@ async def predict(file: UploadFile = File(...)):
     try:
         image_bytes = await file.read()
         predictions = predict_image(image_bytes)
+        print("📸 Predictions brutes YOLO :", predictions)
         
         result = {}
         for label, confidence in predictions.items():
@@ -75,3 +76,4 @@ def delete_tag(tag_name: str):
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
+    
