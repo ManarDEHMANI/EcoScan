@@ -19,49 +19,39 @@ class TagInfo(BaseModel):
     harmfulness: str
 # List of tags to insert
 etiquettes = [
-    # Plastic Bottles
     {
         "tag": "juice",
-        "description": "Bottled juices like orange and apple are made from PET or HDPE. Consume in moderation to avoid excess sugar.",
-        "impact": "PET takes up to 450 years to decompose.",
-        "practice": "Recycle properly or choose glass containers.",
-        "harmfulness": "PET can leach antimony and phthalates when reused or heated."
+        "description": "Fruit-based beverages containing natural and sometimes added sugars. Limit consumption to 1 small glass per day due to high sugar content, prefer whole fruits.",
     },
     {
         "tag": "water",
-        "description": "Bottled water, including sparkling types, uses PET bottles. Stay hydrated but limit plastic use.",
-        "impact": "Single-use PET contributes to marine pollution.",
-        "practice": "Use reusable bottles and filter tap water.",
-        "harmfulness": "PET may leach microplastics and chemicals like antimony, especially when exposed to heat or reused."
+        "description": "Essential daily beverage for hydration and body function. Recommended intake is 2-3 liters per day, adjusting based on activity level and climate.",
     },
     {
         "tag": "milk",
-        "description": "Milk and dairy alternatives are packaged in opaque HDPE bottles. Balance intake to accommodate lactose tolerance.",
-        "impact": "HDPE takes ~100 years to decompose.",
-        "practice": "Buy in bulk, recycle correctly, or use reusable containers.",
-        "harmfulness": "HDPE can leach trace chemicals if improperly handled or exposed to extreme conditions."
+        "description": "Dairy beverages and alternatives providing calcium and protein. Consider individual lactose tolerance and nutritional needs when choosing varieties.",
     },
     {
         "tag": "soft-drink",
-        "description": "Carbonated drinks like Coca-Cola and Pepsi use PET bottles. Limit sugary drinks to maintain health.",
-        "impact": "PET pollution harms oceans.",
-        "practice": "Recycle diligently and reduce single-use soft drinks.",
-        "harmfulness": "PET degrades into microplastics and releases chemicals like antimony when exposed to heat or reused."
+        "description": "Carbonated, sweetened beverages high in sugar content. Limit or avoid consumption for better health; opt for water or unsweetened drinks.",
     },
     {
         "tag": "cleaning",
-        "description": "Cleaners such as detergents and bleach are stored in HDPE bottles. Use safely and avoid chemical exposure.",
-        "impact": "HDPE contributes to long-term plastic waste.",
-        "practice": "Choose concentrated or eco-friendly products and recycle properly.",
-        "harmfulness": "HDPE can leach trace chemicals over time, posing environmental contamination risks."
+        "description": "Chemical solutions for household cleaning. Keep away from food areas, avoid skin contact, use in ventilated spaces, and keep out of reach of children.",
     },
     {
         "tag": "washing",
-        "description": "Dishwashing liquids and laundry detergents use HDPE and TRITAN. Follow usage instructions to prevent irritation.",
-        "impact": "TRITAN has limited recycling options.",
-        "practice": "Opt for biodegradable cleaners and reuse or recycle containers.",
-        "harmfulness": "TRITAN may contain BPA substitutes like BPS or BPF, potential endocrine disruptors."
+        "description": "Detergents and cleaning solutions for dishes and laundry. Use according to instructions, avoid skin contact, and keep away from food items.",
     },
+   {
+        "tag": "alcohol",
+        "description": "Spirits, wines, and liqueurs containing varying levels of alcohol. Consume in moderation following health guidelines: maximum 2 drinks per day for men, 1 for women.",
+    },
+    {
+        "tag": "oil",
+        "description": "Cooking and seasoning liquids including vegetable, olive, and specialty oils. Use moderately as part of a balanced diet, following recommended daily fat intake guidelines.",
+    },
+    
     # Plastic Materials
     {
         "tag": "HDPE",
@@ -83,35 +73,6 @@ etiquettes = [
         "impact": "Similar decomposition time to other plastics and limited recycling options.",
         "practice": "Reuse TRITAN bottles multiple times, properly clean them to extend their lifespan, and dispose of them responsibly when no longer usable.",
         "harmfulness": "May contain BPA substitutes like BPS or BPF, which could also act as endocrine disruptors."
-    },
-    # Glass Bottles
-    {
-        "tag": "alcohol",
-        "description": "Alcohol bottles, including those for spirits, wine, and liqueurs, are typically crafted from robust soda-lime glass with unique shapes and closures.",
-        "impact": "Energy-intensive to produce but fully recyclable.",
-        "practice": "Reuse bottles for storage or decoration, return them for recycling when possible, and support brands that use recycled glass.",
-        "harmfulness": "Fragile and heavy, increasing transportation-related emissions."
-    },
-    {
-        "tag": "water",
-        "description": "Glass water bottles are valued for their purity and lack of chemical leaching.",
-        "impact": "Heavier than plastic, increasing transportation emissions, but entirely recyclable.",
-        "practice": "Use reusable glass water bottles, avoid single-use options, and ensure proper recycling after use.",
-        "harmfulness": "Heavier than plastic, posing breakage risks."
-    },
-    {
-        "tag": "juice",
-        "description": "Glass juice bottles preserve flavor without altering taste, often made from clear or amber soda-lime glass.",
-        "impact": "Reusable and recyclable, reducing plastic pollution.",
-        "practice": "Choose glass juice bottles, recycle them after use, and prefer products with minimal glass packaging.",
-        "harmfulness": "Fragile and can lead to breakage."
-    },
-    {
-        "tag": "oil",
-        "description": "Oil bottles are usually made from amber or clear soda-lime glass to protect contents from light degradation.",
-        "impact": "Reusable and recyclable, decreasing reliance on plastic containers.",
-        "practice": "Reuse oil bottles for storage or other purposes, recycle them appropriately, and support sustainable packaging choices.",
-        "harmfulness": "Fragile and can cause spills if broken."
     },
     
     # Glass Materials
