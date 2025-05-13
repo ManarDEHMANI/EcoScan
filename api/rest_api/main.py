@@ -10,9 +10,10 @@ tags_collection = get_db()["tags_info"]
 class TagInfo(BaseModel):
     tag: str
     description: Optional[str] = None
-    impact: str
-    practice: str
-    harmfulness: str
+    impact: Optional[str] = None
+    practice: Optional[str] = None
+    harmfulness: Optional[str] = None
+    toxicity: Optional[list[int]] = []
 
 @app.get("/")
 def health_check():
