@@ -193,6 +193,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import axios from 'axios';
 import { API_URL } from '../config';
+import RNFS from 'react-native-fs';
 
 //import mime from 'mime-types';
 
@@ -237,12 +238,43 @@ const Scanner = ({ navigation }: Props) => {
   if (!cameraPermission) return <Text>Camera permission not granted</Text>;
   if (!device) return <Text>No camera device available</Text>;
 
+  const currentTime = () => {
+    const date = new Date();
+    return `${date.getFullYear()}${
+        String(date.getMonth() + 1).padStart(2, '0')}${
+        String(date.getDate()).padStart(2, '0')}_${
+        String(date.getHours()).padStart(2, '0')}${
+        String(date.getMinutes()).padStart(2, '0')}${
+        String(date.getSeconds()).padStart(2, '0')}`;
+  };
+  // example of output : "20230915_144530"
+
+const ensureDirectoryExists = async (dirPath: string) => {
+    try {
+      const parts = dirPath.split('/');
+      let currentPath = '';
+      
+      for (const part of parts) {
+        currentPath += `${part}/`;
+        const exists = await RNFS.exists(currentPath);
+        if (!exists) {
+          await RNFS.mkdir(currentPath);
+        }
+      }
+      return true;
+    } catch (error) {
+      console.error('Error creating directory:', error);
+      throw error;
+    }
+  };
+
   const takePhoto = async () => {
     try {
       if (!camera.current) return console.error('Camera not available');
       const photo = await camera.current.takePhoto();
       setCapturedPhoto(`file://${photo.path}`);
       setShowPreview(true);
+      // console.log('Photo saved successfully at:', destinationPath);
     } catch (error) {
       console.error('Error taking photo:', error);
     }
@@ -251,34 +283,65 @@ const Scanner = ({ navigation }: Props) => {
   const confirmPhoto = async () => {
     if (!capturedPhoto) return;
 
-    const photoUri = capturedPhoto.replace('file://', '');
-    const fileName = photoUri.split('/').pop() || 'image.jpg';
-    const fileType = 'image/jpeg';
 
+    try{
+      const timestamp = currentTime();
+      const originalPath = capturedPhoto.replace('file://', '');
 
-    const formData = new FormData();
-    formData.append('file', {
-      uri: capturedPhoto,
-      name: fileName,
-      type: fileType,
-    } as any);
+      const pathParts = originalPath.split('/');
+      pathParts.pop();
+      pathParts.pop();
+      pathParts.push('assets');
+      pathParts.push('historic');
+      pathParts.push(`image${timestamp}`);
+      
+      const dirPath = pathParts.join('/');
+      const dirCreated = await ensureDirectoryExists(dirPath);
+      if (!dirCreated) {
+        throw new Error('Failed to create directory structure');
+      }
+      
+      const destinationPathPhoto = `${pathParts.join('/')}/${timestamp}.jpg`;
+      const destinationPathJson = `${pathParts.join('/')}/${timestamp}.json`;
 
-    try {
-      const response = await axios.post(`${API_URL}/scan-product`, formData, {
+      const formData = new FormData();
+      formData.append('file', {
+        uri: capturedPhoto,
+        name: `${timestamp}.jpg`,
+        type: 'image/jpeg',
+      } as any);
 
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      try {
+        const response = await axios.post(`${API_URL}/scan-product`, formData, {
 
-      navigation.navigate('Result', {
-        photoUri: capturedPhoto,
-        predictions: response.data.predictions,
-      });
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        
+        await RNFS.moveFile(originalPath, destinationPathPhoto);
+        
+        const jsonData = {
+          timestamp: timestamp,
+          photoPath: destinationPathPhoto,
+          predictions: response.data.predictions,
+        };
+        await RNFS.writeFile(
+            destinationPathJson, 
+            JSON.stringify(jsonData, null, 2), 
+            'utf8'
+        );
+
+        navigation.navigate('Result', {
+          photoUri: `file://${destinationPathPhoto}`,
+          predictions: response.data.predictions,
+        });
+
+      } catch (error: any) {
+        console.error('Error sending image to server:', error.message || error);
+      }
     } catch (error: any) {
-      console.error('Error sending image to server:', error.message || error);
+      console.error('Error save image into Local: ', error.message || error);
     }
   };
-
-
   
   const retakePhoto = () => {
     setCapturedPhoto(null);
