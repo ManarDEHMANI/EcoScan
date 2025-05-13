@@ -17,6 +17,7 @@ class TagInfo(BaseModel):
     impact: Optional[str] = None
     practice: Optional[str] = None
     harmfulness: Optional[str] = None
+    toxicity: Optional[list[int]] = []
 # List of tags to insert
 etiquettes = [
     {
@@ -58,21 +59,24 @@ etiquettes = [
         "description": "HDPE (High-Density Polyethylene) - Opaque. HDPE is a strong, opaque plastic commonly used for milk, detergents, and bleach bottles.",
         "impact": "Takes about 100 years to decompose and has a global recycling rate of ~30%.",
         "practice": "Recycle HDPE correctly, choose products with minimal packaging, and support brands using recycled HDPE.",
-        "harmfulness": "Can leach trace chemicals if improperly handled or exposed to extreme conditions."
+        "harmfulness": "Can leach trace chemicals if improperly handled or exposed to extreme conditions.",
+        "toxicity": [1]
     },
     {
         "tag": "PET",
         "description": "PET (Polyethylene Terephthalate) - Transparent. PET is a lightweight, clear plastic widely used for water, soft drinks, and juice bottles.",
         "impact": "Can take up to 450 years to decompose with a global recycling rate of ~25%.",
         "practice": "Opt for recycled PET products, diligently recycle PET bottles, and reduce reliance on single-use PET by using reusable containers.",
-        "harmfulness": "Can release antimony and phthalates, especially when reused or exposed to high temperatures."
+        "harmfulness": "Can release antimony and phthalates, especially when reused or exposed to high temperatures.",
+        "toxicity": [1,2]
     },
     {
         "tag": "TRITAN",
         "description": "TRITAN (Copolyester). TRITAN is a durable, BPA-free copolyester used in reusable water bottles and premium cleaning product containers.",
         "impact": "Similar decomposition time to other plastics and limited recycling options.",
         "practice": "Reuse TRITAN bottles multiple times, properly clean them to extend their lifespan, and dispose of them responsibly when no longer usable.",
-        "harmfulness": "May contain BPA substitutes like BPS or BPF, which could also act as endocrine disruptors."
+        "harmfulness": "May contain BPA substitutes like BPS or BPF, which could also act as endocrine disruptors.",
+        "toxicity": [1]
     },
     
     # Glass Materials
@@ -81,21 +85,24 @@ etiquettes = [
         "description": "Soda-lime glass is the most widely used glass type for bottles, accounting for about 70-75% of all glass production.",
         "impact": "Highly recyclable with lower energy consumption during recycling compared to production from raw materials.",
         "practice": "Maximize recycling efforts, choose products made with recycled soda-lime glass, and support initiatives that enhance glass recycling rates.",
-        "harmfulness": "Fragile and can pose injury risks if shattered."
+        "harmfulness": "Fragile and can pose injury risks if shattered.",
+        "toxicity": [2]
     },
     {
         "tag": "borosilicate",
         "description": "Borosilicate glass is rarely used for everyday beverage bottles but is ideal for specialized, heat-resistant bottles such as those used in laboratories and kitchens.",
         "impact": "Can be reused for many years due to its resistance to heat and chemicals, but difficult to recycle with standard soda-lime glass.",
         "practice": "Reuse borosilicate bottles for appropriate applications and support recycling facilities that handle borosilicate glass.",
-        "harmfulness": "Less shock-resistant than soda-lime glass, still fragile and can cause injuries if broken."
+        "harmfulness": "Less shock-resistant than soda-lime glass, still fragile and can cause injuries if broken.",
+        "toxicity": [1]
     },
     {
         "tag": "crystal",
         "description": "Crystal glass is typically used for luxury containers like wine carafes and high-end decorative items.",
         "impact": "Less recyclable due to potential lead content and high-energy production, often leading to increased waste when broken.",
         "practice": "Use crystal glass for decorative purposes, recycle lead-free variations when possible, and support sustainable crystal production.",
-        "harmfulness": "Traditional crystal may contain lead, which can leach into acidic beverages."
+        "harmfulness": "Traditional crystal may contain lead, which can leach into acidic beverages.",
+        "toxicity": [3]
     }
 ]
 
