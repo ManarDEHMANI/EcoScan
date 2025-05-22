@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Image, Text, StyleSheet, ScrollView, Button } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from './types';
-
+import axios from 'axios';
+import { API_URL } from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 type ResultScreenRouteProp = RouteProp<RootStackParamList, 'Result'>;
 
 type Props = {
@@ -11,7 +14,28 @@ type Props = {
 
 const Result = ({ route }: Props) => {
   const { photoUri, predictions } = route.params;
-
+  const saveScan = async () => {
+    try {
+      const userData = await AsyncStorage.getItem('userData');
+      const user = userData ? JSON.parse(userData) : null;
+      const userId = user?._id;
+  
+      if (!userId) throw new Error('User ID not found');
+  
+      await axios.post(`${API_URL}/user/${userId}/scans`, {
+        photoUri,
+        predictions,
+        date: new Date().toISOString()
+      });
+  
+      Alert.alert('Success', 'Scan saved successfully!');
+    } catch (err) {
+      console.error('❌ Error saving scan:', err);
+      Alert.alert('Error', 'Failed to save scan.');
+    }
+  };
+  
+  
   return (
     <ScrollView contentContainerStyle={styles.resultContainer}>
       {photoUri && (
@@ -38,8 +62,14 @@ const Result = ({ route }: Props) => {
             {info.description && <Text>📖 Description: {info.description}</Text>}
             {info.message && <Text>ℹ️ {info.message}</Text>}
           </View>
+          
         );
       })}
+        <View>
+            <Button title="Save this Scan" onPress={saveScan} />
+
+        </View>
+          
     </ScrollView>
   );
 };

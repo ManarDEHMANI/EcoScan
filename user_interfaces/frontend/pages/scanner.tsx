@@ -193,6 +193,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
 import axios from 'axios';
 import { API_URL } from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //import mime from 'mime-types';
 
@@ -254,7 +255,8 @@ const Scanner = ({ navigation }: Props) => {
     const photoUri = capturedPhoto.replace('file://', '');
     const fileName = photoUri.split('/').pop() || 'image.jpg';
     const fileType = 'image/jpeg';
-
+    const userData = await AsyncStorage.getItem('userData');
+    const userId = JSON.parse(userData || '{}')._id;    
 
     const formData = new FormData();
     formData.append('file', {
@@ -262,6 +264,7 @@ const Scanner = ({ navigation }: Props) => {
       name: fileName,
       type: fileType,
     } as any);
+    formData.append('userId', userId);
 
     try {
       const response = await axios.post(`${API_URL}/scan-product`, formData, {
@@ -272,6 +275,7 @@ const Scanner = ({ navigation }: Props) => {
       navigation.navigate('Result', {
         photoUri: capturedPhoto,
         predictions: response.data.predictions,
+        userId: 'currentUserId',
       });
     } catch (error: any) {
       console.error('Error sending image to server:', error.message || error);
