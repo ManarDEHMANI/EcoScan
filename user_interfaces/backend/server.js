@@ -16,6 +16,8 @@ const FormData = require('form-data');
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 const username = encodeURIComponent("<username>");
 const password = encodeURIComponent("<password>");
@@ -51,7 +53,9 @@ const User = mongoose.model('User', userSchema);
 const scanSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   date: { type: Date, default: Date.now },
-  predictions: { type: Object, required: true }
+  predictions: { type: Object, required: true },
+  photoUri: { type: String }
+
 });
 
 const Scan = mongoose.model('Scan', scanSchema);
@@ -236,6 +240,9 @@ app.post('/scan-product', upload.single('file'), async (req, res) => {
   if (!req.file || !userId) {
     return res.status(400).json({ message: 'File and userId are required.' });
   }
+  console.log('📥 Fichier reçu:', req.file);
+  console.log('👤 Utilisateur:', req.body.userId);
+  console.log('🖼️ Photo URI:', req.body.photoUri);
 
   try {
     const imagePath = path.resolve(req.file.path);
@@ -253,6 +260,7 @@ app.post('/scan-product', upload.single('file'), async (req, res) => {
     await Scan.create({
       userId,
       predictions: response.data.predictions,
+      photoUri: req.body.photoUri,
     });
 
     res.json(response.data);

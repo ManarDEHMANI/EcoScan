@@ -265,6 +265,7 @@ const Scanner = ({ navigation }: Props) => {
       type: fileType,
     } as any);
     formData.append('userId', userId);
+    formData.append('photoUri', capturedPhoto);
 
     try {
       const response = await axios.post(`${API_URL}/scan-product`, formData, {
@@ -275,7 +276,8 @@ const Scanner = ({ navigation }: Props) => {
       navigation.navigate('Result', {
         photoUri: capturedPhoto,
         predictions: response.data.predictions,
-        userId: 'currentUserId',
+        userId,
+        showSaveButton: true,
       });
     } catch (error: any) {
       console.error('Error sending image to server:', error.message || error);

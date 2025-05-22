@@ -13,7 +13,7 @@ type Props = {
 };
 
 const Result = ({ route }: Props) => {
-  const { photoUri, predictions } = route.params;
+  const { photoUri, predictions, showSaveButton = true  } = route.params;
   const saveScan = async () => {
     try {
       const userData = await AsyncStorage.getItem('userData');
@@ -65,10 +65,11 @@ const Result = ({ route }: Props) => {
           
         );
       })}
+       {showSaveButton && (
         <View>
-            <Button title="Save this Scan" onPress={saveScan} />
-
+          <Button title="Save this Scan" onPress={saveScan} />
         </View>
+      )}
           
     </ScrollView>
   );

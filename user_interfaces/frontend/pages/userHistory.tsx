@@ -37,20 +37,20 @@ const UserHistory: React.FC<Props> = ({ route }) => {
   const deleteScan = async (scanId: string) => {
     Alert.alert(
       "Confirmation",
-      "Supprimer ce scan ?",
+      "Do you want to delete this scan? ?",
       [
-        { text: "Annuler", style: "cancel" },
+        { text: "Cancel", style: "cancel" },
         {
-          text: "Supprimer",
+          text: "Delete",
           style: "destructive",
           onPress: async () => {
             try {
               await axios.delete(`${API_URL}/history/${scanId}`);
               setScans((prev) => prev.filter((scan) => scan._id !== scanId));
-              Alert.alert("✅ Succès", "Le scan a bien été supprimé.");
+              Alert.alert("✅ Success", "Scan deleted successfully.");
             } catch (err) {
               console.error('❌ Failed to delete scan', err);
-              Alert.alert("❌ Erreur", "Échec de la suppression du scan.");
+              Alert.alert("❌ Error", "Failed to delete scan.");
             }
           },
         },
@@ -58,6 +58,11 @@ const UserHistory: React.FC<Props> = ({ route }) => {
     );
   };  
   return (
+    <View style={styles.container}>
+    <Text style={styles.title}>📸 Scan History</Text>
+    <Text style={styles.subtitle}>
+      Tap to view scan details. Use the button below each card to delete a scan.
+    </Text>
     <FlatList
       data={scans}
       keyExtractor={(item) => item._id}
@@ -66,9 +71,10 @@ const UserHistory: React.FC<Props> = ({ route }) => {
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('Result', {
-              photoUri: '', 
+              photoUri: item.photoUri ?? '',
               predictions: item.predictions,
               userId,
+              showSaveButton: false, 
             })
           }
           onLongPress={() => deleteScan(item._id)}
@@ -80,17 +86,21 @@ const UserHistory: React.FC<Props> = ({ route }) => {
                 🔖 {tag} ({info.confidence ?? 'N/A'})
               </Text>
             ))}
-            <Button title="Delete" onPress={() => deleteScan(item._id)} color="red" />
+            <Button title="Delete" onPress={() => deleteScan(item._id)} color="#34A853" />
 
           </View>
         </TouchableOpacity>
       )}
     />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 16 },
+  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 8, textAlign: 'center' },
+  subtitle: { fontSize: 14, color: '#555', marginBottom: 16, textAlign: 'center' },
+  list: { paddingBottom: 20 },
   card: {
     marginBottom: 12,
     padding: 16,

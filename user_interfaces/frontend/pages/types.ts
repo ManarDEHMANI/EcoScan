@@ -12,7 +12,7 @@ export type RootStackParamList = {
     AvatarPicker: undefined;
     ScientificBasis : undefined;
     // Result: { photoUri: string; predictions: Record<string, any> };
-    Result: { photoUri: string; predictions: any; userId: string };
+    Result: { photoUri: string; predictions: any; userId: string ;  showSaveButton?: boolean;};
     
   };
   
