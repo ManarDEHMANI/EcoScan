@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, Button } from 'react-native';
 import axios from 'axios';
 import { API_URL } from '../config';
 import { RouteProp, useNavigation } from '@react-navigation/native';
@@ -19,6 +19,7 @@ interface ScanHistory {
 interface Props {
   route: UserHistoryRouteProp;
 }
+
 
 const UserHistory: React.FC<Props> = ({ route }) => {
   const { userId } = route.params;
@@ -44,17 +45,18 @@ const UserHistory: React.FC<Props> = ({ route }) => {
           style: "destructive",
           onPress: async () => {
             try {
-              await axios.delete(`${API_URL}/scan/${scanId}`);
+              await axios.delete(`${API_URL}/history/${scanId}`);
               setScans((prev) => prev.filter((scan) => scan._id !== scanId));
+              Alert.alert("✅ Succès", "Le scan a bien été supprimé.");
             } catch (err) {
               console.error('❌ Failed to delete scan', err);
+              Alert.alert("❌ Erreur", "Échec de la suppression du scan.");
             }
           },
         },
       ]
     );
-  };
-
+  };  
   return (
     <FlatList
       data={scans}
@@ -78,6 +80,8 @@ const UserHistory: React.FC<Props> = ({ route }) => {
                 🔖 {tag} ({info.confidence ?? 'N/A'})
               </Text>
             ))}
+            <Button title="Delete" onPress={() => deleteScan(item._id)} color="red" />
+
           </View>
         </TouchableOpacity>
       )}

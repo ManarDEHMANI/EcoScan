@@ -293,6 +293,24 @@ app.post('/save-scan', async (req, res) => {
   }
 });
 
+app.delete('/history/:scanId', async (req, res) => {
+  const { scanId } = req.params;
+
+  try {
+    const result = await Scan.deleteOne({ _id: scanId });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Scan not found' });
+    }
+
+    res.status(200).json({ message: 'Scan deleted successfully' });
+  } catch (err) {
+    console.error('❌ Error deleting scan:', err);
+    res.status(500).json({ message: 'Failed to delete scan' });
+  }
+});
+
+
 app.get('/user/:userId/scans', async (req, res) => {
   try {
     const scans = await Scan.find({ userId: req.params.userId }).sort({ date: -1 });
