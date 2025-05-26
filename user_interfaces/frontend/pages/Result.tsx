@@ -50,7 +50,17 @@ const Result = ({ route }: Props) => {
           harmfulness?: string;
           description?: string;
           message?: string;
+          toxicity?: number[];
         };
+        const isValid = (val?: string) =>
+          val && val.trim() !== '' && val !== 'Information not available';
+        const getToxicityInfo = (levels: number[]) => {
+          if (levels.includes(3)) return { label: 'High', color: 'red' };
+          if (levels.includes(2)) return { label: 'Moderate', color: 'orange' };
+          if (levels.includes(1)) return { label: 'Low', color: 'green' };
+          return { label: 'Unknown', color: 'gray' };
+        };
+        
 
         return (
           <View key={index} style={styles.card}>
@@ -60,7 +70,16 @@ const Result = ({ route }: Props) => {
             {info.practice && <Text>♻️ Good Practice: {info.practice}</Text>}
             {info.harmfulness && <Text>☠️ Harmfulness: {info.harmfulness}</Text>}
             {info.description && <Text>📖 Description: {info.description}</Text>}
-            {info.message && <Text>ℹ️ {info.message}</Text>}
+            {isValid(info.message) && <Text>ℹ️ {info.message}</Text>}
+            {info.toxicity && info.toxicity.length > 0 && (() => {
+  const { label, color } = getToxicityInfo(info.toxicity!);
+  return (
+    <Text style={{ color, fontWeight: 'bold' }}>
+      🧪 Toxicity Level: {label}
+    </Text>
+  );
+})()}
+
           </View>
           
         );

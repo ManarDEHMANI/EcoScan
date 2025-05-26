@@ -66,7 +66,7 @@ const UserHistory: React.FC<Props> = ({ route }) => {
     <FlatList
       data={scans}
       keyExtractor={(item) => item._id}
-      contentContainerStyle={styles.container}
+      contentContainerStyle={styles.list}
       renderItem={({ item }) => (
         <TouchableOpacity
           onPress={() =>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
   title: { fontSize: 22, fontWeight: 'bold', marginBottom: 8, textAlign: 'center' },
   subtitle: { fontSize: 14, color: '#555', marginBottom: 16, textAlign: 'center' },
-  list: { paddingBottom: 20 },
+  list: { paddingBottom: 20 ,  paddingHorizontal: 16,},
   card: {
     marginBottom: 12,
     padding: 16,

@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { RootStackParamList } from './types';
 
@@ -10,7 +10,8 @@ type Props = {
   };  
 const Home = ({ navigation}  : Props ) => {
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
+    <View>
      <View style={styles.header}>
         <TouchableOpacity>
           <Image source={require('../assets/menu.png')} style={styles.profileIcon}/>
@@ -33,10 +34,11 @@ const Home = ({ navigation}  : Props ) => {
         </Text>
       </View>
       <TouchableOpacity onPress={() => navigation.navigate('ScientificBasis')}>
-        <Text style={{ color: '#007bff' }}>📘 Voir la méthodologie de classification</Text>
+        <Text style={{ color: '#007bff' }}>📘 Discover the scientific criteria behind our toxicity classification.</Text>
       </TouchableOpacity>
 
     </View>
+    </ScrollView>
   );
 };
 

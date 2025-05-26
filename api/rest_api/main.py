@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from .db import get_db
 import uvicorn
-
+import pprint
 app = FastAPI(title="YOLOv8 Image Classification API")
 tags_collection = get_db()["tags_info"]
 class TagInfo(BaseModel):
@@ -38,14 +38,17 @@ async def predict(file: UploadFile = File(...)):
                     "confidence": confidence,
                     "message": "Information not available"
                 }
+        pprint.pprint(result)
         return {"predictions": result}
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Invalid image: {str(e)}")
 
+
 @app.get("/tag/{tag_name}")
 def get_tag_info(tag_name: str):
     info = tags_collection.find_one({"tag": tag_name})
+    print("DEBUG - Mongo Info:", info)
     if info:
         info.pop("_id", None)
         return info
