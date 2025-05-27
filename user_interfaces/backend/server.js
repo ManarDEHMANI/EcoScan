@@ -16,6 +16,8 @@ const FormData = require('form-data');
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 const username = encodeURIComponent("<username>");
 const password = encodeURIComponent("<password>");
@@ -48,10 +50,21 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
+const scanSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  date: { type: Date, default: Date.now },
+  predictions: { type: Object, required: true },
+  photoUri: { type: String }
+
+});
+
+const Scan = mongoose.model('Scan', scanSchema);
+
 // Routes
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+
 
 // Create a new item
 app.post("/createUser", async (req, res) => {
@@ -193,24 +206,61 @@ app.get("/getAllUsers", async (req, res) => {
 });
 
 const upload = multer({ dest: 'uploads/' });
+// app.post('/scan-product', upload.single('file'), async (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).json({ message: 'No file uploaded.' });
+//   }
+
+//   try {
+//     const imagePath = path.resolve(req.file.path);
+
+//     const form = new FormData();
+//     form.append('file', fs.createReadStream(imagePath));
+
+//     const response = await axios.post('http://192.168.0.25:8000/predict/', form, {
+//       headers: form.getHeaders(),
+//     });
+//     // const response = await axios.post('https://ecoscan-ht6l.onrender.com/predict/', form, {
+//     //   headers: form.getHeaders(),
+//     // });
+    
+//     // Supprimer le fichier temporaire
+//     fs.unlink(imagePath, (err) => {
+//       if (err) console.error('❌ Failed to delete temp image:', err);
+//     });
+
+//     res.json(response.data);
+//   } catch (error) {
+//     console.error('❌ Error sending image to YOLO API:', error.message);
+//     res.status(500).json({ message: 'Error processing image', error: error.message });
+//   }
+// });
 app.post('/scan-product', upload.single('file'), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded.' });
+  const userId = req.body.userId; // 🔥 N'oublie pas de l'envoyer depuis le front
+  if (!req.file || !userId) {
+    return res.status(400).json({ message: 'File and userId are required.' });
   }
+  console.log('📥 Fichier reçu:', req.file);
+  console.log('👤 Utilisateur:', req.body.userId);
+  console.log('🖼️ Photo URI:', req.body.photoUri);
 
   try {
     const imagePath = path.resolve(req.file.path);
-
     const form = new FormData();
     form.append('file', fs.createReadStream(imagePath));
 
     const response = await axios.post('http://192.168.0.25:8000/predict/', form, {
       headers: form.getHeaders(),
-    });
+    });    
 
-    // Supprimer le fichier temporaire
     fs.unlink(imagePath, (err) => {
       if (err) console.error('❌ Failed to delete temp image:', err);
+    });
+
+    await Scan.create({
+      userId,
+      predictions: response.data.predictions,
+      photoUri: req.body.photoUri,
     });
 
     res.json(response.data);
@@ -219,6 +269,65 @@ app.post('/scan-product', upload.single('file'), async (req, res) => {
     res.status(500).json({ message: 'Error processing image', error: error.message });
   }
 });
+
+app.post('/user/:userId/scans', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { photoUri, predictions, date } = req.body;
+
+    const newScan = new Scan({ userId, photoUri, predictions, date });
+    await newScan.save();
+
+    res.status(201).json({ message: 'Scan saved' });
+  } catch (err) {
+    console.error('❌ Failed to save scan:', err.message);
+    res.status(500).json({ message: 'Error saving scan' });
+  }
+});
+
+app.post('/save-scan', async (req, res) => {
+  const { userId, predictions } = req.body;
+  if (!userId || !predictions) {
+    return res.status(400).json({ message: 'Missing userId or predictions' });
+  }
+
+  try {
+    const newScan = new Scan({ userId, predictions });
+    await newScan.save();
+    res.status(201).json({ message: 'Scan saved successfully' });
+  } catch (error) {
+    console.error('❌ Error saving scan:', error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.delete('/history/:scanId', async (req, res) => {
+  const { scanId } = req.params;
+
+  try {
+    const result = await Scan.deleteOne({ _id: scanId });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Scan not found' });
+    }
+
+    res.status(200).json({ message: 'Scan deleted successfully' });
+  } catch (err) {
+    console.error('❌ Error deleting scan:', err);
+    res.status(500).json({ message: 'Failed to delete scan' });
+  }
+});
+
+
+app.get('/user/:userId/scans', async (req, res) => {
+  try {
+    const scans = await Scan.find({ userId: req.params.userId }).sort({ date: -1 });
+    res.status(200).json(scans);
+  } catch (err) {
+    res.status(500).json({ message: 'Error retrieving scans' });
+  }
+});
+
 
 // Start the server
 app.listen(port, '0.0.0.0', () => {

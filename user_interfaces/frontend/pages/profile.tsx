@@ -16,6 +16,8 @@ const Profile = () => {
   const [name, setName] = React.useState('');
   const [lastname, setLastname] = React.useState('');
   const [email, setEmail] = React.useState('');
+  const [userId, setUserId] = React.useState('');
+
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       fetchUserData();
@@ -30,6 +32,7 @@ const Profile = () => {
       setName(user.name);
       setLastname(user.lastname);
       setEmail(user.email);
+      setUserId(user._id);
       if (user.avatar) {
         if (user.avatar.startsWith('http') || user.avatar.startsWith('file') || user.avatar.startsWith('/')) {
           setSelectedAvatar({ uri: user.avatar });
@@ -47,6 +50,10 @@ const Profile = () => {
   };
 
   
+  function alert(arg0: string) {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.whitePanel}>
@@ -62,7 +69,13 @@ const Profile = () => {
         </View>
 
         <View style={styles.menu}>
-          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('UserHistory')}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => {
+                  if (userId) {
+                    navigation.navigate('UserHistory', { userId });
+                  } else {
+                    alert("❌ User ID not found");
+                  }
+                }}>
             <Image source={require('../assets/list.png')} style={styles.Icon}/>
             <Text style={styles.menuText}>My History</Text>
           </TouchableOpacity>
