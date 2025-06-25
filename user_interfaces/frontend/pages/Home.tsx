@@ -16,13 +16,13 @@ const Home = ({ navigation}  : Props ) => {
         <TouchableOpacity>
           <Image source={require('../assets/menu.png')} style={styles.profileIcon}/>
         </TouchableOpacity>
-        <Text style={styles.appName}>EcoScan</Text>
+        <Text style={styles.appName}>Eco-Scan</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image source={require('../assets/profil-utilisateur.png')} style={styles.profileIcon}/>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.welcomeText}>Welcome to EcoScan!</Text>
+      <Text style={styles.welcomeText}>Welcome to Eco-Scan!</Text>
       <Text style={styles.slogan}>“A healthy planet is a priceless gift.”</Text>
       
       <Image source={require('../assets/home.png')} style={styles.illustration} resizeMode="contain" />
@@ -30,7 +30,7 @@ const Home = ({ navigation}  : Props ) => {
       <View style={styles.impactSection}>
         <Text style={styles.sectionTitle}>Why We Care</Text>
         <Text style={styles.impactText}>
-          By using EcoScan, you contribute to a cleaner environment, reduce pollution, and make informed choices for your health and the planet.
+          By using Eco-Scan, you contribute to a cleaner environment, reduce pollution, and make informed choices for your health and the planet.
         </Text>
       </View>
       <TouchableOpacity onPress={() => navigation.navigate('ScientificBasis')}>

@@ -17,7 +17,7 @@ const Welcome= ({ navigation}  : Props ) => {
       </TouchableOpacity>
       
       <Text style={styles.title}>Welcome to</Text>
-      <Text style={styles.appName}>EcoScan</Text>
+      <Text style={styles.appName}>Eco-Scan</Text>
       
       <Image
         source={require('../assets/welcome.jpeg')}

@@ -236,8 +236,8 @@ const upload = multer({ dest: 'uploads/' });
 //   }
 // });
 app.post('/scan-product', upload.single('file'), async (req, res) => {
-  const userId = req.body.userId; // 🔥 N'oublie pas de l'envoyer depuis le front
-  if (!req.file || !userId) {
+  //const userId = req.body.userId; 
+  if (!req.file) {
     return res.status(400).json({ message: 'File and userId are required.' });
   }
   console.log('📥 Fichier reçu:', req.file);
@@ -257,11 +257,11 @@ app.post('/scan-product', upload.single('file'), async (req, res) => {
       if (err) console.error('❌ Failed to delete temp image:', err);
     });
 
-    await Scan.create({
-      userId,
-      predictions: response.data.predictions,
-      photoUri: req.body.photoUri,
-    });
+    // await Scan.create({
+    //   userId,
+    //   predictions: response.data.predictions,
+    //   photoUri: req.body.photoUri,
+    // });
 
     res.json(response.data);
   } catch (error) {

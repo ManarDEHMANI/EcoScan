@@ -55,9 +55,9 @@ const Result = ({ route }: Props) => {
         const isValid = (val?: string) =>
           val && val.trim() !== '' && val !== 'Information not available';
         const getToxicityInfo = (levels: number[]) => {
-          if (levels.includes(3)) return { label: 'High', color: 'red' };
-          if (levels.includes(2)) return { label: 'Moderate', color: 'orange' };
-          if (levels.includes(1)) return { label: 'Low', color: 'green' };
+          if (levels.includes(3)) return { label: 'Dangerous', color: 'red' };
+          if (levels.includes(2)) return { label: 'Use with Caution', color: 'orange' };
+          if (levels.includes(1)) return { label: 'Non Toxic', color: 'green' };
           return { label: 'Unknown', color: 'gray' };
         };
         

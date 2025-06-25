@@ -120,7 +120,7 @@ const submitForm = async() => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
+      <Text style={styles.title}>Sign Up</Text>
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>First Name</Text>
